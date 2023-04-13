@@ -1,30 +1,21 @@
-# import glob
-#
-# myfiles = glob.glob('Practical\Txt files\*.txt')
-#
-# print(myfiles)
-#
-# for itempath in myfiles:
-#     with open(itempath, 'r') as file:
-#         print(file.read())
+import PySimpleGUI as sg
 
-# import csv
-#
-# with open('Practical\Txt files\weather.csv', 'r') as file:
-#     data = list(csv.reader(file))
-#
-# city = input('Enter a city from a list: ')
-#
-# for row in data[1:]:
-#     if row[0] == city:
-#         print('The temperature is:', row[1])
+# Prepare the widgets for the left column
+left_column_content = [[sg.Text('Left 1')],
+                       [sg.Text('Left 2')]]
 
-# import shutil
-#
-# shutil.make_archive('output', 'zip', 'Practical\Txt files')
+# Prepare the widgets for the right column
+right_column_content = [[sg.Text('Right 1')],
+                        [sg.Text('Right 2')]]
 
-import webbrowser
+# Construct the Column widgets
+left_column = sg.Column(left_column_content)
+right_column = sg.Column(right_column_content)
 
-user_term = input('Enter a search term: ').replace(' ', '+')
+# Construct the layout
+layout = [[left_column, right_column]]
 
-webbrowser.open('https://www.google.com/search?q=' + user_term)
+# Construct and display the window
+window = sg.Window('Columns', layout)
+window.read()
+window.close()
