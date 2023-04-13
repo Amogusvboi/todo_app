@@ -1,6 +1,10 @@
 import new_functions
 import PySimpleGUI as sg
+import time
 
+sg.theme('Black')
+
+clock = sg.Text('',key='clock')
 label = sg.Text("Type in a to-do")
 input_box = sg.InputText(tooltip='Enter todo', key='todo')
 add_button = sg.Button('Add')
@@ -14,10 +18,11 @@ window = sg.Window('To-Do Application',
                    layout=[[label],
                            [input_box, add_button],
                            [list_box, edit_button],
-                           [complete_button, close_button]],
+                           [complete_button, close_button, clock]],
                    font=('Helvetica', 12))
 while True:
-    event, values = window.read()
+    event, values = window.read(timeout=200)
+    window['clock'].update(time.strftime('%H:%M:%S'))
     print(event)
     print(values)
     print('Clothing...')
@@ -29,22 +34,28 @@ while True:
             window['todos'].update(values=todos)
             window['todo'].update(value='')
         case 'Edit':
-            todo_to_edit = values['todos'][0]
-            new_todo = values['todo'] + '\n'
+            try:
+                todo_to_edit = values['todos'][0]
+                new_todo = values['todo'] + '\n'
 
-            todos = new_functions.read_todos()
-            index = todos.index(todo_to_edit)
-            todos[index] = new_todo
-            new_functions.write_todos(todos)
-            window['todos'].update(values=todos)
+                todos = new_functions.read_todos()
+                index = todos.index(todo_to_edit)
+                todos[index] = new_todo
+                new_functions.write_todos(todos)
+                window['todos'].update(values=todos)
+            except:
+                sg.popup('Please select an item first!', font=('Helvetiva', 12))
         case 'todos':
             window['todo'].update(value=values['todos'][0])
         case 'Complete':
-            todos = new_functions.read_todos()
-            todos.remove(values['todos'][0])
-            new_functions.write_todos(todos)
-            window['todos'].update(values=todos)
-            window['todo'].update(value='')
+            try:
+                todos = new_functions.read_todos()
+                todos.remove(values['todos'][0])
+                new_functions.write_todos(todos)
+                window['todos'].update(values=todos)
+                window['todo'].update(value='')
+            except:
+                sg.popup('Please select an item first!', font=('Helvetica', 12))
         case sg.WIN_CLOSED:
             break
         case 'Ready':
